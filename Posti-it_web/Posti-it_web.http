@@ -1,0 +1,6 @@
+@Posti_it_web_HostAddress = http://localhost:5054
+
+GET {{Posti_it_web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
