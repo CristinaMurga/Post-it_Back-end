@@ -33,7 +33,8 @@ public partial class PostItDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.Password).IsFixedLength();
+            entity.Property(e => e.PasswordSalt).IsFixedLength();
+            entity.Property(e => e.PasswordHash).IsFixedLength();
             entity.Property(e => e.Username).IsFixedLength();
         });
 

@@ -18,7 +18,12 @@ public partial class User
     [StringLength(10)]
     public string? Username { get; set; }
 
-    [Column("password")]
-    [StringLength(10)]
-    public string? Password { get; set; }
+    [Column("PasswordSalt")]
+    [StringLength(40)]
+    public string? PasswordSalt { get; set; }
+
+    [Column("PasswordHash")]
+    [StringLength(40)]
+    public string? PasswordHash { get; set; }
+
 }
