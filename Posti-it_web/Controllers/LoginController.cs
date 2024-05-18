@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Posti_it_web.Repository.Models;
 
 namespace Posti_it_web.Controllers
@@ -9,12 +10,12 @@ namespace Posti_it_web.Controllers
     public class LoginController :Controller
     {
         private readonly IAuthenticationService _authenticationService;
+
         public LoginController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
-
         }
-           
+
         [HttpPost]
         [Route("/login")]
         public  IActionResult Login(UserCheck user)
@@ -35,8 +36,11 @@ namespace Posti_it_web.Controllers
 
     public class UserCheck
     {
-        public string username { get; set; }
-        public string password { get; set; }
+        [JsonProperty("username")]
+        public string Username { get; set; }
+
+        [JsonProperty("password")]
+        public string Password { get; set; }
     }
 }
 

@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Posti_it_web.Logic.Authentication;
 using Posti_it_web.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,13 @@ builder.Services.AddDbContext<PostItDbContext>(opt => opt.UseSqlServer(builder.C
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication()
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler> ("BasicAuthentication", null);
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
+});
 
 builder.Services.AddCors(opt =>
 {
@@ -31,7 +41,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.UseCors("CorsPolicy");
 app.MapControllers();

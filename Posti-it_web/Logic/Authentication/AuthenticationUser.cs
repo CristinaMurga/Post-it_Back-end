@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 
-namespace Pedalacom.BLogic.Authentication
+namespace Posti_it_web.Logic.Authentication
 {
     public class AuthenticationUser : IIdentity
     {

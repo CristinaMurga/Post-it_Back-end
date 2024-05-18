@@ -42,4 +42,6 @@ public partial class PostItDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<Posti_it_web.Repository.Models.Color> Color { get; set; } = default!;
 }

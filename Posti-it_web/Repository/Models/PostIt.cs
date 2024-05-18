@@ -14,19 +14,20 @@ public partial class PostIt
     [Column("id")]
     public int? Id { get; set; }
 
-    [Column("position")]
-    [StringLength(20)]
-    [Unicode(false)]
-    public string? Position { get; set; }
-
     [Column("body")]
-    [Unicode(false)]
     public string? Body { get; set; }
 
     [Column("color")]
     [StringLength(10)]
-    public string? Color { get; set; }
+    public string Color { get; set; }
 
     [Column("userID")]
     public int UserID { get; set;}
+
+    [Column("positionLeftX")]
+    public int? PositionLeftX { get; set; }
+
+    [Column("positionTopY")]
+    public int? PositionTopY { get; set; }
 }
+

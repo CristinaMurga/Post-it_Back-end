@@ -78,10 +78,22 @@ namespace Posti_it_web.Controllers
         [HttpPost]
         public async Task<ActionResult<PostIt>> PostPostIt(PostIt postIt)
         {
-            _context.PostIts.Add(postIt);
-            await _context.SaveChangesAsync();
+            try
+            {
+                postIt.Id = null;
 
-            return CreatedAtAction("GetPostIt", new { id = postIt.Id }, postIt);
+                _context.PostIts.Add(postIt);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetPostIt", new { id = postIt.Id }, postIt);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+           
         }
 
         // DELETE: api/PostIts/5

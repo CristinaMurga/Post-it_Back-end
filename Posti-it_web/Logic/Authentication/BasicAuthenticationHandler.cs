@@ -1,28 +1,20 @@
-﻿using Azure.Core;
-using Azure;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Pedalacom.BLogic.Encryption;
+using Posti_it_web.Repository;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.CodeAnalysis.Scripting;
-using System.Security.Cryptography;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
-using System.Xml.Serialization;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.Identity.Client;
-using Posti_it_web.Repository;
-using Pedalacom.BLogic.Encryption;
 
-namespace Pedalacom.BLogic.Authentication
+namespace Posti_it_web.Logic.Authentication
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly PostItDbContext _context;
-     
 
+        
 
         public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
@@ -39,16 +31,13 @@ namespace Pedalacom.BLogic.Authentication
 
             try
             {
-               
-                  Response.Headers.Add("WWW-Authenticate", "Basic");
-               
-                
+                Response.Headers.Add("WWW-Authenticate", "Basic");
 
                 if (!Request.Headers.ContainsKey("Authorization"))
                 {
-                    
+
                     throw new InvalidOperationException("Autorizzazione mancante: Procedere con l'autenticazione");
-                    
+
                 }
 
                 var authorizationHeader = Request.Headers["Authorization"].ToString();
@@ -75,26 +64,28 @@ namespace Pedalacom.BLogic.Authentication
 
                 // Verifica nel database
                 var user = await _context.Users
-                 .Where(c => c.Username.ToLower() == username.ToLower())
-                 .OrderByDescending(c => c.Username)
-                 .FirstOrDefaultAsync();
+                    .Where(c => c.Username.ToLower() == username.ToLower())
+                    .FirstOrDefaultAsync();
+             
 
 
                 DecryptSalt decryptSalt = new();
 
-                    if (user == null || !decryptSalt.DecryptSaltCredential(user, password))
-                    {
-                        throw new InvalidOperationException("Autorizzazione non valida : utente non registrato");
-                    }
+                if (user == null || !decryptSalt.DecryptSaltCredential(user, password))
+                {
+                    throw new InvalidOperationException("Autorizzazione non valida : utente non registrato");
+                }
                 var authenticationUser = new AuthenticationUser(username, "BasicAuthentication", true);
                 var claims = new ClaimsPrincipal(new ClaimsIdentity(authenticationUser));
 
                 authenticationResult = AuthenticateResult.Success(new AuthenticationTicket(claims, "BasicAuthentication"));
-                return authenticationResult;              
+                return authenticationResult;
             }
             catch (Exception ex)
             {
-              throw ex;
+                
+                authenticationResult = AuthenticateResult.Fail($"Errore : {ex.Message}");
+                return authenticationResult;
 
             }
         }

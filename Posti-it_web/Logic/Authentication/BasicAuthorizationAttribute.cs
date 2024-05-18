@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Pedalacom.BLogic.Authentication
+namespace Posti_it_web.Logic.Authentication
 {
     public class BasicAutorizationAttributes : AuthorizeAttribute
     {

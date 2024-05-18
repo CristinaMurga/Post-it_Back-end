@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Pedalacom.Controllers;
 using Posti_it_web.Repository;
 using Posti_it_web.Repository.Models;
 
@@ -78,10 +79,19 @@ namespace Posti_it_web.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+
+            user.Id = null;  
+            //password hash
+            Encryption en = new Encryption();
+            KeyValuePair<string, string> keyValuePair;
+            keyValuePair = en.EncrypSaltString(user.PasswordSalt);
+            user.PasswordHash = keyValuePair.Key;
+            user.PasswordSalt = keyValuePair.Value;
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return NoContent();
         }
 
         // DELETE: api/Users/5
