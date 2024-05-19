@@ -30,17 +30,23 @@ namespace Posti_it_web.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int? id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<bool>> GetUser(string username)
         {
-            var user = await _context.Users.FindAsync(id);
+            bool exists = false;
 
-            if (user == null)
+            var user = await _context.Users
+                  .Where(p => p.Username == username).FirstOrDefaultAsync();
+                  
+
+            if (user != null)
             {
-                return NotFound();
+                exists = true;
+                return exists;
             }
 
-            return user;
+
+            return exists;
         }
 
         // PUT: api/Users/5

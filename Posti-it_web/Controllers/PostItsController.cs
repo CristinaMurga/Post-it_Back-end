@@ -29,17 +29,19 @@ namespace Posti_it_web.Controllers
         }
 
         // GET: api/PostIts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PostIt>> GetPostIt(int? id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<List<PostIt>>> GetPostIt(string username)
         {
-            var postIt = await _context.PostIts.FindAsync(id);
+            var postItList = await _context.PostIts
+               .Where(p => p.Username == username)
+               .ToListAsync();
 
-            if (postIt == null)
+            if (postItList == null || postItList.Count == 0)
             {
                 return NotFound();
             }
 
-            return postIt;
+            return Ok(postItList);
         }
 
         // PUT: api/PostIts/5

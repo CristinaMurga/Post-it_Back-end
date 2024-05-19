@@ -21,8 +21,8 @@ public partial class PostIt
     [StringLength(10)]
     public string Color { get; set; }
 
-    [Column("userID")]
-    public int UserID { get; set;}
+    [Column("username")]
+    public string Username{ get; set;}
 
     [Column("positionLeftX")]
     public int? PositionLeftX { get; set; }
